@@ -80,20 +80,20 @@ const totalEarned = computed(() => {
 })
 
 const performanceClass = computed(() => {
-  if (finalScore.value >= 800) return 'bg-green-100 text-green-800'
-  if (finalScore.value >= 500) return 'bg-yellow-100 text-yellow-800'
+  if (finalScore.value >= 6000) return 'bg-green-100 text-green-800'
+  if (finalScore.value >= 4000) return 'bg-yellow-100 text-yellow-800'
   return 'bg-red-100 text-red-800'
 })
 
 const performanceTitle = computed(() => {
-  if (finalScore.value >= 800) return 'Master Sailor! 🌟'
-  if (finalScore.value >= 500) return 'Good Captain! ⭐'
+  if (finalScore.value >= 6000) return 'Master Sailor! 🌟'
+  if (finalScore.value >= 4000) return 'Good Captain! ⭐'
   return 'Learning Sailor 📚'
 })
 
 const performanceMessage = computed(() => {
-  if (finalScore.value >= 800) return 'Perfect balance! You upgraded wisely while keeping money for the final score.'
-  if (finalScore.value >= 500) return 'Good strategy! You found the right balance between upgrades and saving.'
+  if (finalScore.value >= 6000) return 'Perfect balance! You upgraded wisely while keeping money for the final score.'
+  if (finalScore.value >= 4000) return 'Good strategy! You found the right balance between upgrades and saving.'
   return 'Try balancing upgrades with saving money for a higher final score!'
 })
 
