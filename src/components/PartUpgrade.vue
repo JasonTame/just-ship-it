@@ -9,7 +9,7 @@
             <h4 class="font-bold text-gray-800 capitalize pixel-font">{{ partName }}</h4>
             <div class="flex space-x-1">
               <div
-                v-for="level in 5"
+                v-for="level in 4"
                 :key="level"
                 class="w-2 h-2 rounded-full border-2"
                 :class="level <= partData.level 
