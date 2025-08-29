@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Ocean Theme Colors */
+  --color-ocean-deep: #1e3a8a;
+  --color-ocean-medium: #3b82f6;
+  --color-ocean-light: #60a5fa;
+  --color-ocean-foam: #dbeafe;
+  --color-sand: #fbbf24;
+  --color-sail: #f8fafc;
+  --color-wood: #92400e;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* Typography */
+  --font-game: "Courier New", monospace;
+  --font-ui: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-ui);
+  background: linear-gradient(180deg, #87ceeb 0%, #4a90e2 100%);
+  min-height: 100vh;
+}
+
+.pixel-font {
+  font-family: var(--font-game);
+  font-weight: bold;
+  text-rendering: optimizeSpeed;
+}
+
+.ocean-gradient {
+  background: linear-gradient(180deg, #87ceeb 0%, #4a90e2 100%);
+}
+
+.boat-shadow {
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}
