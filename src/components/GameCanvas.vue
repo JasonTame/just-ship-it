@@ -64,65 +64,10 @@ let targetDistance = 0
 let animationSpeed = 2
 let waveOffset = 0
 
-// Boat sprite data (simple pixel art)
-const boatSprite = {
-  width: 32,
-  height: 24,
-  frames: [
-    // Frame 1 - boat slightly tilted up
-    [
-      '................................',
-      '................................',
-      '................................',
-      '................................',
-      '................................',
-      '................................',
-      '........wwwwwwww................',
-      '.......wwwwwwwwww...............',
-      '......wwwwwwwwwwww..............',
-      '.....wwwwwwwwwwwwww.............',
-      '....wwwwwwwwwwwwwwww............',
-      '...wwwwwwwwwwwwwwwwww...........',
-      '..wwwwwwwwwwwwwwwwwwww..........',
-      '.wwwwwwwwwwwwwwwwwwwwww.........',
-      'wwwwwwwwwwwwwwwwwwwwwwww........',
-      'bbbbbbbbbbbbbbbbbbbbbbbb........',
-      'bbbbbbbbbbbbbbbbbbbbbbbb........',
-      '................................',
-      '................................',
-      '................................',
-      '................................',
-      '................................',
-      '................................'
-    ],
-    // Frame 2 - boat slightly tilted down
-    [
-      '................................',
-      '................................',
-      '................................',
-      '................................',
-      '................................',
-      '................................',
-      '................................',
-      '................................',
-      '........wwwwwwww................',
-      '.......wwwwwwwwww...............',
-      '......wwwwwwwwwwww..............',
-      '.....wwwwwwwwwwwwww.............',
-      '....wwwwwwwwwwwwwwww............',
-      '...wwwwwwwwwwwwwwwwww...........',
-      '..wwwwwwwwwwwwwwwwwwww..........',
-      '.wwwwwwwwwwwwwwwwwwwwww.........',
-      'wwwwwwwwwwwwwwwwwwwwwwww........',
-      'bbbbbbbbbbbbbbbbbbbbbbbb........',
-      'bbbbbbbbbbbbbbbbbbbbbbbb........',
-      '................................',
-      '................................',
-      '................................',
-      '................................',
-      '................................'
-    ]
-  ]
+// Boat emoji configuration
+const boatConfig = {
+  width: 24,
+  height: 24
 }
 
 // Milestone buoy positions
@@ -148,7 +93,7 @@ function setupCanvas() {
   
   // Set initial boat position - start at left edge, not at first milestone
   boatX = 24 // Start at left edge
-  boatY = canvasHeight / 2 - boatSprite.height / 2
+  boatY = canvasHeight / 2 - boatConfig.height / 2
 }
 
 function calculateBuoyPositions() {
@@ -171,25 +116,25 @@ function drawScene() {
   ctx.clearRect(0, 0, canvasWidth, canvasHeight)
   
   // Draw sky (top 40% of canvas)
-  const skyGradient = ctx.createLinearGradient(0, 0, 0, canvasHeight * 0.4)
+  const skyGradient = ctx.createLinearGradient(0, 0, 0, canvasHeight * 0.7)
   skyGradient.addColorStop(0, '#87CEEB')
   skyGradient.addColorStop(1, '#B0E0E6')
   ctx.fillStyle = skyGradient
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight * 0.4)
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight * 0.7)
   
   // Draw ocean (bottom 60% of canvas) - much flatter
-  const oceanGradient = ctx.createLinearGradient(0, canvasHeight * 0.4, 0, canvasHeight)
+  const oceanGradient = ctx.createLinearGradient(0, canvasHeight * 0.7, 0, canvasHeight)
   oceanGradient.addColorStop(0, '#4682B4')
   oceanGradient.addColorStop(1, '#2F4F4F')
   ctx.fillStyle = oceanGradient
-  ctx.fillRect(0, canvasHeight * 0.4, canvasWidth, canvasHeight * 0.6)
+  ctx.fillRect(0, canvasHeight * 0.7, canvasWidth, canvasHeight * 0.6)
   
   // Draw horizon line
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)'
   ctx.lineWidth = 1
   ctx.beginPath()
-  ctx.moveTo(0, canvasHeight * 0.4)
-  ctx.lineTo(canvasWidth, canvasHeight * 0.4)
+  ctx.moveTo(0, canvasHeight * 0.7)
+  ctx.lineTo(canvasWidth, canvasHeight * 0.7)
   ctx.stroke()
   
   
@@ -203,7 +148,7 @@ function drawScene() {
 function drawBuoys() {
     buoyPositions.value.forEach(buoy => {
     if (!ctx) return
-    const oceanSurface = canvasHeight * 0.39
+    const oceanSurface = canvasHeight * 0.69
     const time = Date.now() * 0.001
     const bobY = oceanSurface + Math.sin(time + buoy.x * 0.01) * 2 // Minimal bobbing
     
@@ -226,52 +171,47 @@ function drawBuoys() {
 function drawBoat() {
   if (!ctx) return
   
-  const frameIndex = Math.floor(Date.now() * 0.002) % 2 // Slower animation
-  const frame = boatSprite.frames[frameIndex]
-  
-  const oceanSurface = canvasHeight * 0.42
+  const oceanSurface = canvasHeight * 0.72
   const time = Date.now() * 0.003
-  const bobOffset = Math.sin(time) * 1 // Much smaller bobbing
-  const currentBoatY = oceanSurface - boatSprite.height + bobOffset
+  const bobOffset = Math.sin(time) * 3 // Gentle floating motion
+  const currentBoatY = oceanSurface - 9 + bobOffset // Position boat to sit on water
   
-  // Enhanced bobbing motion
-  const tilt = isAnimating.value ? Math.sin(time * 2) * 0.1 : 0
+  // Enhanced floating motion with slight tilt
+  const tilt = isAnimating.value ? Math.sin(time * 2) * 0.05 : 0
   
   // Draw boat shadow
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'
-  for (let y = 0; y < frame.length; y++) {
-    for (let x = 0; x < frame[y].length; x++) {
-      const pixel = frame[y][x]
-      if (pixel !== '.') {
-        ctx.fillRect(boatX + x + 2, currentBoatY + y + 2, 1, 1)
-      }
-    }
-  }
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'
+  ctx.font = '24px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", Arial, sans-serif'
+  ctx.textAlign = 'center'
   
-  // Draw boat with enhanced colors
-  for (let y = 0; y < frame.length; y++) {
-    for (let x = 0; x < frame[y].length; x++) {
-      const pixel = frame[y][x]
-      if (pixel !== '.') {
-        let color = '#8B4513'
-        if (pixel === 'w') color = '#F8F9FA' // Brighter white sail
-        if (pixel === 'b') color = '#5D4037' // Richer brown hull
-        
-        ctx.fillStyle = color
-        ctx.fillRect(boatX + x, currentBoatY + y + tilt, 1, 1)
-      }
-    }
-  }
+  // Flip the boat horizontally for shadow
+  ctx.save()
+  ctx.translate(boatX + 2, currentBoatY + 2)
+  ctx.scale(-1, 1)
+  ctx.fillText('⛵', 0, 0)
+  ctx.restore()
+  
+  // Draw boat emoji with floating animation (flipped horizontally)
+  ctx.fillStyle = '#000000' // Ensure emoji is visible
+  ctx.font = '24px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", Arial, sans-serif'
+  ctx.textAlign = 'center'
+  
+  // Flip the boat horizontally
+  ctx.save()
+  ctx.translate(boatX, currentBoatY + tilt)
+  ctx.scale(-1, 1)
+  ctx.fillText('⛵', 0, 0)
+  ctx.restore()
   
   // Add wake effect when moving
   if (isAnimating.value && boatX > 60) {
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)'
     ctx.lineWidth = 1
     ctx.beginPath()
-    ctx.moveTo(boatX - 10, boatY + 20)
-    ctx.lineTo(boatX - 20, boatY + 25)
-    ctx.moveTo(boatX - 10, boatY + 25)
-    ctx.lineTo(boatX - 20, boatY + 30)
+    ctx.moveTo(boatX - 10, currentBoatY + 20)
+    ctx.lineTo(boatX - 20, currentBoatY + 25)
+    ctx.moveTo(boatX - 10, currentBoatY + 25)
+    ctx.lineTo(boatX - 20, currentBoatY + 30)
     ctx.stroke()
   }
 }
@@ -327,7 +267,18 @@ defineExpose({
   50% { transform: translateY(-10px); }
 }
 
+@keyframes gentle-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-2px) rotate(0.5deg); }
+  50% { transform: translateY(-4px) rotate(0deg); }
+  75% { transform: translateY(-2px) rotate(-0.5deg); }
+}
+
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+.animate-gentle-float {
+  animation: gentle-float 4s ease-in-out infinite;
 }
 </style>
